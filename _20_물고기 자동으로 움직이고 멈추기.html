@@ -1,0 +1,96 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD Xhtml 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>물고기 자동으로 움직이기</title>
+    <style>
+        body {
+            font-size: 9pt;
+        }
+
+        #panel {
+            width: 600px;
+            height: 300px;
+            border: 1px solid #999;
+            position: relative;
+        }
+
+        #bar {
+            position: absolute;
+            left: 50px;
+            top: 190px;
+            width: 500px;
+            height: 20px;
+            background: #F30;
+        }
+
+        #fish {
+            position: absolute;
+            left: 50px;
+            top: 120px;
+        }
+
+        #nav {
+            text-align: center;
+            width: 600px;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script src="js/jquery-3.7.0.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <div id="panel">
+            <div id="bar"> </div>
+            <img src="images/fish1.png" id="fish">
+        </div>
+        <div id="nav">
+            <button id="btnStart">
+                시작
+            </button>
+            <button id="btnStop">
+                멈춤
+            </button>
+        </div>
+    </div>
+    <script>
+        //left < 50 || left > 430 물고기회전
+
+        //interval 300ms
+        //300ms마다 움직이는 값은 50
+        let step = 50;
+        let interval;
+        let position;
+
+        $("#btnStart").on("click", () => {
+            interval = setInterval(() => {
+                position = $("#fish").position().left + step;
+
+                if (position > 430) {
+                    step = -50; //현재값에서 50을 계속빼줌 -> 원래자리로 복귀
+                    $("#fish").attr("src", "images/fish2.png"); //이미지추가
+                    position += step; //꼬리 안튀어나오게ㅔ
+                }
+
+                if (position < 50) {
+                    step = 50; //원래자리로 왔을때 왼쪽으로 다시 돌아가게하기ㅣ
+                    $("#fish").attr("src", "images/fish1.png"); //이미지추가
+                    position += step; //꼬리 안튀어나오게ㅔ
+                }
+
+                $("#fish").css("left", position); //left로 100ms - 50 씩 이동함
+            }, 100);
+        });
+
+        $("#btnStop").on("click", () => {
+            if (typeof interval !== "undefined") //interval -> undefined일때만 멈춤
+                clearInterval(interval); //멈춤눌렀을 때 멈추게 하기
+        });
+    </script>
+</body>
+
+</html>
